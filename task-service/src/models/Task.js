@@ -1,40 +1,46 @@
-export class Task {
-  constructor({
-    id,
-    userId,
-    title,
-    description,
-    priority,
-    dueDate,
-    columnId,
-    position,
-    createdAt,
-    updatedAt
-  }) {
-    this.id = id
-    this.userId = userId
-    this.title = title
-    this.description = description || ''
-    this.priority = priority || 'medium' // low, medium, high
-    this.dueDate = dueDate || null
-    this.columnId = columnId
-    this.position = position || 0
-    this.createdAt = createdAt || new Date().toISOString()
-    this.updatedAt = updatedAt || new Date().toISOString()
-  }
+import mongoose from 'mongoose'
 
-  toJSON() {
-    return {
-      id: this.id,
-      userId: this.userId,
-      title: this.title,
-      description: this.description,
-      priority: this.priority,
-      dueDate: this.dueDate,
-      columnId: this.columnId,
-      position: this.position,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
-    }
+const taskSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+    index: true
+  },
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  description: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  priority: {
+    type: String,
+    enum: ['low', 'medium', 'high'],
+    default: 'medium'
+  },
+  dueDate: {
+    type: Date,
+    default: null
+  },
+  columnId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Column',
+    required: true,
+    index: true
+  },
+  position: {
+    type: Number,
+    default: 0
   }
-}
+}, {
+  timestamps: true
+})
+
+// Index for efficient querying
+taskSchema.index({ userId: 1, columnId: 1, position: 1 })
+taskSchema.index({ userId: 1, dueDate: 1, priority: 1 })
+
+export const Task = mongoose.model('Task', taskSchema)

@@ -1,28 +1,25 @@
-export class Column {
-  constructor({
-    id,
-    userId,
-    name,
-    position,
-    createdAt,
-    updatedAt
-  }) {
-    this.id = id
-    this.userId = userId
-    this.name = name
-    this.position = position || 0
-    this.createdAt = createdAt || new Date().toISOString()
-    this.updatedAt = updatedAt || new Date().toISOString()
-  }
+import mongoose from 'mongoose'
 
-  toJSON() {
-    return {
-      id: this.id,
-      userId: this.userId,
-      name: this.name,
-      position: this.position,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
-    }
+const columnSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+    index: true
+  },
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  position: {
+    type: Number,
+    default: 0
   }
-}
+}, {
+  timestamps: true
+})
+
+// Index for efficient querying
+columnSchema.index({ userId: 1, position: 1 })
+
+export const Column = mongoose.model('Column', columnSchema)

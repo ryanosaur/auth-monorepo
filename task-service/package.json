@@ -1,0 +1,19 @@
+{
+  "name": "task-service",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Task management service for kanban board",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-jwt": "^8.4.1",
+    "jwks-rsa": "^3.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "uuid": "^9.0.1"
+  }
+}

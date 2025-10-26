@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_AUTH0_DOMAIN=${VITE_AUTH0_DOMAIN}
+      - VITE_AUTH0_CLIENT_ID=${VITE_AUTH0_CLIENT_ID}
+      - VITE_AUTH0_AUDIENCE=${VITE_AUTH0_AUDIENCE}
+      - VITE_BFF_API_URL=http://localhost:3001
+    depends_on:
+      - bff
+
+  bff:
+    build:
+      context: ./bff
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./bff:/app
+      - /app/node_modules
+    environment:
+      - PORT=3001
+      - NODE_ENV=development
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
+      - USER_SERVICE_URL=http://user-service:3002
+      - FRONTEND_URL=http://localhost:5173
+    depends_on:
+      - user-service
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./user-service:/app
+      - /app/node_modules
+    environment:
+      - PORT=3002
+      - NODE_ENV=development
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
+      - ALLOWED_ORIGINS=http://localhost:3001,http://localhost:5173

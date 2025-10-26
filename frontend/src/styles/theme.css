@@ -1,0 +1,316 @@
+/* Import retro font */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+/* Vaporwave Theme - Retro Aesthetic */
+
+:root {
+  /* Vaporwave Color Palette */
+  --neon-pink: #ff6ec7;
+  --neon-purple: #b967ff;
+  --neon-cyan: #05ffa1;
+  --neon-blue: #01cdfe;
+  --deep-purple: #2d1b69;
+  --dark-bg: #0a0e27;
+  --darker-bg: #050814;
+  --grid-color: rgba(255, 110, 199, 0.3);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-neon: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-purple) 50%, var(--neon-pink) 100%);
+  --gradient-dark: linear-gradient(180deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+
+  /* Typography */
+  --font-display: 'Orbitron', 'Courier New', monospace;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Effects */
+  --glow-pink: 0 0 20px rgba(255, 110, 199, 0.5);
+  --glow-cyan: 0 0 20px rgba(5, 255, 161, 0.5);
+  --glow-purple: 0 0 20px rgba(185, 103, 255, 0.5);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--darker-bg);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* Animated Grid Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: 0 0, 0 0;
+  animation: gridMove 20s linear infinite;
+  pointer-events: none;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+@keyframes gridMove {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 50px 50px, 50px 50px;
+  }
+}
+
+/* Gradient overlay */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+/* Glowing text effect */
+.glow-text {
+  text-shadow: var(--glow-pink);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    text-shadow: var(--glow-pink);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(255, 110, 199, 0.8);
+  }
+}
+
+/* Neon button styles */
+.btn-neon {
+  background: transparent;
+  border: 2px solid var(--neon-pink);
+  color: var(--neon-pink);
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  font-family: var(--font-display);
+}
+
+.btn-neon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-neon);
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+.btn-neon:hover {
+  color: white;
+  border-color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-2px);
+}
+
+.btn-neon:hover::before {
+  left: 0;
+}
+
+/* Card styles */
+.vaporwave-card {
+  background: rgba(10, 14, 39, 0.8);
+  border: 2px solid var(--neon-purple);
+  border-radius: 12px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(185, 103, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.vaporwave-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(185, 103, 255, 0.1) 0%, transparent 70%);
+  animation: cardGlow 3s ease-in-out infinite;
+}
+
+@keyframes cardGlow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translate(0, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(10px, 10px);
+  }
+}
+
+/* Form input styles */
+.vaporwave-input {
+  background: rgba(5, 8, 20, 0.6);
+  border: 2px solid var(--deep-purple);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: white;
+  font-size: 1rem;
+  width: 100%;
+  transition: all 0.3s ease;
+  font-family: var(--font-body);
+}
+
+.vaporwave-input:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+  background: rgba(5, 8, 20, 0.8);
+}
+
+.vaporwave-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Select dropdown */
+.vaporwave-select {
+  background: rgba(5, 8, 20, 0.6);
+  border: 2px solid var(--deep-purple);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: white;
+  font-size: 1rem;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.vaporwave-select:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+.vaporwave-select option {
+  background: var(--darker-bg);
+  color: white;
+}
+
+/* Retro scanlines effect */
+.scanlines {
+  position: relative;
+}
+
+.scanlines::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.1) 0px,
+    transparent 1px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 3px
+  );
+  pointer-events: none;
+  animation: scanlineMove 8s linear infinite;
+}
+
+@keyframes scanlineMove {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(10px);
+  }
+}
+
+/* Heading styles */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 3rem;
+  background: var(--gradient-neon);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(20deg);
+  }
+}
+
+/* Link styles */
+a {
+  color: var(--neon-cyan);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+a:hover {
+  color: var(--neon-pink);
+  text-shadow: var(--glow-pink);
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-neon);
+  transition: width 0.3s ease;
+}
+
+a:hover::after {
+  width: 100%;
+}

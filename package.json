@@ -1,0 +1,28 @@
+{
+  "name": "auth-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo with Vue.js frontend, BFF layer, user service, and task service with Auth0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "bff",
+    "user-service",
+    "task-service"
+  ],
+  "scripts": {
+    "install:all": "npm install && npm install --prefix frontend && npm install --prefix bff && npm install --prefix user-service && npm install --prefix task-service",
+    "dev": "concurrently -n \"frontend,bff,user,task\" -c \"cyan,magenta,green,yellow\" \"npm run dev --prefix frontend\" \"npm run dev --prefix bff\" \"npm run dev --prefix user-service\" \"npm run dev --prefix task-service\"",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:bff": "npm run dev --prefix bff",
+    "dev:user-service": "npm run dev --prefix user-service",
+    "dev:task-service": "npm run dev --prefix task-service",
+    "build": "npm run build --prefix frontend",
+    "clean": "rm -rf node_modules frontend/node_modules bff/node_modules user-service/node_modules task-service/node_modules"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": ["auth0", "vue", "express", "bff", "microservices", "kanban", "tasks"],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,19 +1,23 @@
+import dotenv from 'dotenv'
+
+// Load environment variables FIRST, before any other imports
+dotenv.config()
+
 import express from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import { jwtCheck } from './middleware/auth.js'
 import userRoutes from './routes/users.js'
 import protectedRoutes from './routes/protected.js'
 import taskRoutes from './routes/tasks.js'
 import columnRoutes from './routes/columns.js'
 
-dotenv.config()
-
 // Debug: Log environment variables
 console.log('🔍 Environment variables loaded:')
 console.log('AUTH0_DOMAIN:', process.env.AUTH0_DOMAIN)
 console.log('AUTH0_AUDIENCE:', process.env.AUTH0_AUDIENCE)
 console.log('PORT:', process.env.PORT)
+console.log('USER_SERVICE_URL:', process.env.USER_SERVICE_URL)
+console.log('TASK_SERVICE_URL:', process.env.TASK_SERVICE_URL)
 
 if (!process.env.AUTH0_DOMAIN) {
   console.error('❌ ERROR: AUTH0_DOMAIN is not set in .env file!')

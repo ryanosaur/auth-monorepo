@@ -4,6 +4,8 @@ import axios from 'axios'
 const router = express.Router()
 const TASK_SERVICE_URL = process.env.TASK_SERVICE_URL || 'http://localhost:3003'
 
+console.log('📍 [Tasks Route] TASK_SERVICE_URL loaded as:', TASK_SERVICE_URL)
+
 // Get all tasks
 router.get('/', async (req, res, next) => {
   try {

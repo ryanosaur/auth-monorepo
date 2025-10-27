@@ -1,12 +1,14 @@
+import dotenv from 'dotenv'
+
+// Load environment variables FIRST, before any other imports
+dotenv.config()
+
 import express from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import { jwtCheck } from './middleware/auth.js'
 import taskRoutes from './routes/tasks.js'
 import columnRoutes from './routes/columns.js'
 import { connectDatabase } from './config/database.js'
-
-dotenv.config()
 
 // Connect to MongoDB
 await connectDatabase()

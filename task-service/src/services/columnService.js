@@ -1,12 +1,8 @@
-import { v4 as uuidv4 } from 'uuid'
 import { Column } from '../models/Column.js'
 
-// In-memory storage (replace with database in production)
-const columns = new Map()
-
 // Initialize default columns for a user
-export function initializeDefaultColumns(userId) {
-  const existingColumns = getColumnsByUser(userId)
+export async function initializeDefaultColumns(userId) {
+  const existingColumns = await getColumnsByUser(userId)
 
   if (existingColumns.length > 0) {
     return existingColumns
@@ -18,80 +14,65 @@ export function initializeDefaultColumns(userId) {
     { name: 'Done', position: 2 }
   ]
 
-  return defaultColumns.map((col, index) => {
-    const column = new Column({
-      id: uuidv4(),
+  const createdColumns = await Column.insertMany(
+    defaultColumns.map((col) => ({
       userId,
       name: col.name,
-      position: index
-    })
-    columns.set(column.id, column)
-    return column.toJSON()
-  })
+      position: col.position
+    }))
+  )
+
+  return createdColumns.map(col => col.toObject())
 }
 
-export function createColumn(userId, columnData) {
+export async function createColumn(userId, columnData) {
   const column = new Column({
-    id: uuidv4(),
     userId,
     ...columnData
   })
 
-  columns.set(column.id, column)
-  return column.toJSON()
+  await column.save()
+  return column.toObject()
 }
 
-export function getColumnsByUser(userId) {
-  return Array.from(columns.values())
-    .filter(column => column.userId === userId)
-    .map(column => column.toJSON())
-    .sort((a, b) => a.position - b.position)
+export async function getColumnsByUser(userId) {
+  const columns = await Column.find({ userId })
+    .sort({ position: 1 })
+    .lean()
+
+  return columns
 }
 
-export function getColumnById(columnId, userId) {
-  const column = columns.get(columnId)
+export async function getColumnById(columnId, userId) {
+  const column = await Column.findOne({ _id: columnId, userId }).lean()
 
   if (!column) {
     throw new Error('Column not found')
   }
 
-  if (column.userId !== userId) {
-    throw new Error('Unauthorized')
-  }
-
-  return column.toJSON()
+  return column
 }
 
-export function updateColumn(columnId, userId, updates) {
-  const column = columns.get(columnId)
+export async function updateColumn(columnId, userId, updates) {
+  const column = await Column.findOneAndUpdate(
+    { _id: columnId, userId },
+    { ...updates, updatedAt: new Date() },
+    { new: true, runValidators: true }
+  ).lean()
 
   if (!column) {
     throw new Error('Column not found')
   }
 
-  if (column.userId !== userId) {
-    throw new Error('Unauthorized')
-  }
-
-  Object.assign(column, updates, {
-    updatedAt: new Date().toISOString()
-  })
-
-  columns.set(columnId, column)
-  return column.toJSON()
+  return column
 }
 
-export function deleteColumn(columnId, userId) {
-  const column = columns.get(columnId)
+export async function deleteColumn(columnId, userId) {
+  const result = await Column.deleteOne({ _id: columnId, userId })
 
-  if (!column) {
+  if (result.deletedCount === 0) {
     throw new Error('Column not found')
   }
 
-  if (column.userId !== userId) {
-    throw new Error('Unauthorized')
-  }
-
-  columns.delete(columnId)
   return { success: true }
 }

@@ -12,10 +12,10 @@ import {
 const router = express.Router()
 
 // Get all tasks for the current user
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const userId = req.auth.sub
-    const tasks = getTasksByUser(userId)
+    const tasks = await getTasksByUser(userId)
     res.json(tasks)
   } catch (error) {
     next(error)
@@ -23,10 +23,10 @@ router.get('/', (req, res, next) => {
 })
 
 // Get high priority tasks due this week
-router.get('/priority-week', (req, res, next) => {
+router.get('/priority-week', async (req, res, next) => {
   try {
     const userId = req.auth.sub
-    const tasks = getHighPriorityTasksDueThisWeek(userId)
+    const tasks = await getHighPriorityTasksDueThisWeek(userId)
     res.json(tasks)
   } catch (error) {
     next(error)
@@ -34,11 +34,11 @@ router.get('/priority-week', (req, res, next) => {
 })
 
 // Get a specific task
-router.get('/:taskId', (req, res, next) => {
+router.get('/:taskId', async (req, res, next) => {
   try {
     const userId = req.auth.sub
     const { taskId } = req.params
-    const task = getTaskById(taskId, userId)
+    const task = await getTaskById(taskId, userId)
     res.json(task)
   } catch (error) {
     if (error.message === 'Task not found') {
@@ -52,10 +52,10 @@ router.get('/:taskId', (req, res, next) => {
 })
 
 // Create a new task
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
     const userId = req.auth.sub
-    const task = createTask(userId, req.body)
+    const task = await createTask(userId, req.body)
     res.status(201).json(task)
   } catch (error) {
     next(error)
@@ -63,11 +63,11 @@ router.post('/', (req, res, next) => {
 })
 
 // Update a task
-router.put('/:taskId', (req, res, next) => {
+router.put('/:taskId', async (req, res, next) => {
   try {
     const userId = req.auth.sub
     const { taskId } = req.params
-    const task = updateTask(taskId, userId, req.body)
+    const task = await updateTask(taskId, userId, req.body)
     res.json(task)
   } catch (error) {
     if (error.message === 'Task not found') {
@@ -81,12 +81,12 @@ router.put('/:taskId', (req, res, next) => {
 })
 
 // Move a task to a different column
-router.post('/:taskId/move', (req, res, next) => {
+router.post('/:taskId/move', async (req, res, next) => {
   try {
     const userId = req.auth.sub
     const { taskId } = req.params
     const { columnId, position } = req.body
-    const task = moveTask(taskId, userId, columnId, position)
+    const task = await moveTask(taskId, userId, columnId, position)
     res.json(task)
   } catch (error) {
     if (error.message === 'Task not found') {
@@ -100,11 +100,11 @@ router.post('/:taskId/move', (req, res, next) => {
 })
 
 // Delete a task
-router.delete('/:taskId', (req, res, next) => {
+router.delete('/:taskId', async (req, res, next) => {
   try {
     const userId = req.auth.sub
     const { taskId } = req.params
-    const result = deleteTask(taskId, userId)
+    const result = await deleteTask(taskId, userId)
     res.json(result)
   } catch (error) {
     if (error.message === 'Task not found') {

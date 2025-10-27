@@ -11,14 +11,14 @@ import {
 const router = express.Router()
 
 // Get all columns for the current user
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const userId = req.auth.sub
-    const columns = getColumnsByUser(userId)
+    const columns = await getColumnsByUser(userId)
 
     // If no columns exist, initialize default ones
     if (columns.length === 0) {
-      const defaultColumns = initializeDefaultColumns(userId)
+      const defaultColumns = await initializeDefaultColumns(userId)
       return res.json(defaultColumns)
     }
 
@@ -29,10 +29,10 @@ router.get('/', (req, res, next) => {
 })
 
 // Initialize default columns
-router.post('/initialize', (req, res, next) => {
+router.post('/initialize', async (req, res, next) => {
   try {
     const userId = req.auth.sub
-    const columns = initializeDefaultColumns(userId)
+    const columns = await initializeDefaultColumns(userId)
     res.json(columns)
   } catch (error) {
     next(error)
@@ -40,11 +40,11 @@ router.post('/initialize', (req, res, next) => {
 })
 
 // Get a specific column
-router.get('/:columnId', (req, res, next) => {
+router.get('/:columnId', async (req, res, next) => {
   try {
     const userId = req.auth.sub
     const { columnId } = req.params
-    const column = getColumnById(columnId, userId)
+    const column = await getColumnById(columnId, userId)
     res.json(column)
   } catch (error) {
     if (error.message === 'Column not found') {
@@ -58,10 +58,10 @@ router.get('/:columnId', (req, res, next) => {
 })
 
 // Create a new column
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
     const userId = req.auth.sub
-    const column = createColumn(userId, req.body)
+    const column = await createColumn(userId, req.body)
     res.status(201).json(column)
   } catch (error) {
     next(error)
@@ -69,11 +69,11 @@ router.post('/', (req, res, next) => {
 })
 
 // Update a column
-router.put('/:columnId', (req, res, next) => {
+router.put('/:columnId', async (req, res, next) => {
   try {
     const userId = req.auth.sub
     const { columnId } = req.params
-    const column = updateColumn(columnId, userId, req.body)
+    const column = await updateColumn(columnId, userId, req.body)
     res.json(column)
   } catch (error) {
     if (error.message === 'Column not found') {
@@ -87,11 +87,11 @@ router.put('/:columnId', (req, res, next) => {
 })
 
 // Delete a column
-router.delete('/:columnId', (req, res, next) => {
+router.delete('/:columnId', async (req, res, next) => {
   try {
     const userId = req.auth.sub
     const { columnId } = req.params
-    const result = deleteColumn(columnId, userId)
+    const result = await deleteColumn(columnId, userId)
     res.json(result)
   } catch (error) {
     if (error.message === 'Column not found') {
